@@ -201,3 +201,20 @@ desktop.ini
 tmp/
 temp/
 *.bak
+
+# .NET
+bin/
+obj/
+*.user
+.vs/
+TestResults/
+# Local data and secrets
+*.db
+*.db-shm
+*.db-wal
+.env
+local.settings.json
+samples/*.xlsx
+!samples/synthetic-*.xlsx
+!.env.example
+!**/.env.example

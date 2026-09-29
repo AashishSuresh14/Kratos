@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Kratos.Api/Kratos.Api.csproj" />
+    <Project Path="src/Kratos.Application/Kratos.Application.csproj" />
+    <Project Path="src/Kratos.Domain/Kratos.Domain.csproj" />
+    <Project Path="src/Kratos.Functions/Kratos.Functions.csproj" />
+    <Project Path="src/Kratos.Infrastructure/Kratos.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Kratos.IntegrationTests/Kratos.IntegrationTests.csproj" />
+    <Project Path="tests/Kratos.UnitTests/Kratos.UnitTests.csproj" />
+  </Folder>
+</Solution>

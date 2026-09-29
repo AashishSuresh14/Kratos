@@ -1,0 +1,64 @@
+name: Deploy to Azure
+
+# Uses GitHub OIDC federation: no Azure credentials are stored in GitHub.
+# Repository variables: AZURE_CLIENT_ID, AZURE_TENANT_ID, AZURE_SUBSCRIPTION_ID,
+#   AZURE_WEBAPP_NAME, AZURE_FUNCTIONAPP_NAME, API_BASE_URL
+# Repository secret: AZURE_STATIC_WEB_APPS_API_TOKEN (deployment token of the Static Web App)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [src/**, web/**, .github/workflows/deploy.yml]
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  api:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - run: dotnet test -c Release
+      - run: dotnet publish src/Kratos.Api -c Release -o out/api
+      - run: dotnet publish src/Kratos.Functions -c Release -o out/functions
+      - uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      - uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ vars.AZURE_WEBAPP_NAME }}
+          package: out/api
+      - uses: Azure/functions-action@v1
+        with:
+          app-name: ${{ vars.AZURE_FUNCTIONAPP_NAME }}
+          package: out/functions
+
+  web:
+    runs-on: ubuntu-latest
+    environment: production
+    needs: api
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci
+        working-directory: web
+      - run: npm run build
+        working-directory: web
+        env:
+          VITE_API_BASE: ${{ vars.API_BASE_URL }}/api/v1
+      - uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          action: upload
+          app_location: web/dist
+          skip_app_build: true

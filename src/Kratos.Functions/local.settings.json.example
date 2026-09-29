@@ -1,0 +1,11 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
+    "Database__Provider": "Sqlite",
+    "ConnectionStrings__Kratos": "Data Source=../Kratos.Api/kratos.db",
+    "ANTHROPIC_API_KEY": "",
+    "GEMINI_API_KEY": ""
+  }
+}

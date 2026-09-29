@@ -1,0 +1,145 @@
+/* Design tokens. Light is the default; dark follows the OS unless data-theme pins it. */
+:root {
+  color-scheme: light;
+  --font-display: 'Bricolage Grotesque', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-ui: 'IBM Plex Sans', 'Segoe UI', system-ui, -apple-system, Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --ink: #142b29;
+  --ink-2: #33504c;
+  --muted: #58706c;
+  --faint: #7f9591;
+  --bg: #f4f7f6;
+  --surface: #ffffff;
+  --surface-2: #eef3f2;
+  --surface-sunk: #e8efed;
+  --line: #cfdcd9;
+  --line-soft: #e2eae8;
+
+  --accent: #0f7c75;
+  --accent-strong: #0b625c;
+  --accent-soft: #e1f0ee;
+  --accent-ink: #ffffff;
+
+  --ai: #a2600f;
+  --ai-strong: #86500c;
+  --ai-soft: #fbf1e3;
+  --ai-line: #ecd3ae;
+
+  --good: #2d7a4c;
+  --good-soft: #e2f1e7;
+  --warn: #8a6400;
+  --warn-soft: #f9efcc;
+  --crit: #b3261e;
+  --crit-soft: #fbe6e3;
+
+  --sidebar-bg: #142b29;
+  --sidebar-ink: #d6e5e2;
+  --sidebar-muted: #8fb0aa;
+  --sidebar-active: #1f3f3b;
+
+  --chart-1: #008a7f;
+  --chart-2: #eb6834;
+  --chart-3: #2a78d6;
+  --chart-4: #d55181;
+  --chart-5: #4a3aa7;
+  --chart-grid: #e2eae8;
+
+  --radius-s: 4px;
+  --radius: 6px;
+  --radius-l: 10px;
+  --shadow-pop: 0 10px 30px -8px rgba(20, 43, 41, 0.28), 0 2px 6px rgba(20, 43, 41, 0.08);
+  --shadow-raise: 0 1px 2px rgba(20, 43, 41, 0.06);
+  --focus-ring: 0 0 0 2px var(--surface), 0 0 0 4px var(--accent);
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --sidebar-w: 232px;
+  --topbar-h: 56px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --ink: #e4eeec;
+    --ink-2: #bacdc9;
+    --muted: #8ea8a3;
+    --faint: #6d8783;
+    --bg: #0d1917;
+    --surface: #13221f;
+    --surface-2: #182b28;
+    --surface-sunk: #0f1e1c;
+    --line: #2b433f;
+    --line-soft: #203532;
+    --accent: #3fb3a9;
+    --accent-strong: #62c9bf;
+    --accent-soft: #163a36;
+    --accent-ink: #06201d;
+    --ai: #e3a653;
+    --ai-strong: #f0bb72;
+    --ai-soft: #2f230f;
+    --ai-line: #5a4219;
+    --good: #62c28e;
+    --good-soft: #14301f;
+    --warn: #e2c25c;
+    --warn-soft: #30290f;
+    --crit: #f17d73;
+    --crit-soft: #3a1b18;
+    --sidebar-bg: #0a1513;
+    --sidebar-ink: #cfe0dc;
+    --sidebar-muted: #7d9a95;
+    --sidebar-active: #16302c;
+    --chart-1: #1aa398;
+    --chart-2: #d95926;
+    --chart-3: #3987e5;
+    --chart-4: #d55181;
+    --chart-5: #9085e9;
+    --chart-grid: #223835;
+    --shadow-pop: 0 12px 32px -8px rgba(0, 0, 0, 0.6), 0 2px 6px rgba(0, 0, 0, 0.4);
+    --shadow-raise: none;
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --ink: #e4eeec;
+  --ink-2: #bacdc9;
+  --muted: #8ea8a3;
+  --faint: #6d8783;
+  --bg: #0d1917;
+  --surface: #13221f;
+  --surface-2: #182b28;
+  --surface-sunk: #0f1e1c;
+  --line: #2b433f;
+  --line-soft: #203532;
+  --accent: #3fb3a9;
+  --accent-strong: #62c9bf;
+  --accent-soft: #163a36;
+  --accent-ink: #06201d;
+  --ai: #e3a653;
+  --ai-strong: #f0bb72;
+  --ai-soft: #2f230f;
+  --ai-line: #5a4219;
+  --good: #62c28e;
+  --good-soft: #14301f;
+  --warn: #e2c25c;
+  --warn-soft: #30290f;
+  --crit: #f17d73;
+  --crit-soft: #3a1b18;
+  --sidebar-bg: #0a1513;
+  --sidebar-ink: #cfe0dc;
+  --sidebar-muted: #7d9a95;
+  --sidebar-active: #16302c;
+  --chart-1: #1aa398;
+  --chart-2: #d95926;
+  --chart-3: #3987e5;
+  --chart-4: #d55181;
+  --chart-5: #9085e9;
+  --chart-grid: #223835;
+  --shadow-pop: 0 12px 32px -8px rgba(0, 0, 0, 0.6), 0 2px 6px rgba(0, 0, 0, 0.4);
+  --shadow-raise: none;
+}
