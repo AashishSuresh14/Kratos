@@ -1,0 +1,528 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Digital KAM Blueprint</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#F4F7F6; --surface:#FFFFFF; --ink:#142B29; --muted:#58706C; --line:#CFDCD9;
+  --teal:#0F7C75; --teal-soft:#E1F0EE; --ai:#A2600F; --ai-soft:#FBF1E3; --warn:#9A3B1E;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1716; --surface:#15211F; --ink:#E2ECEA; --muted:#93A9A5; --line:#2C3E3B;
+    --teal:#4CC0B5; --teal-soft:#16302D; --ai:#E3A456; --ai-soft:#2B2216; --warn:#F08A66;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1716; --surface:#15211F; --ink:#E2ECEA; --muted:#93A9A5; --line:#2C3E3B;
+  --teal:#4CC0B5; --teal-soft:#16302D; --ai:#E3A456; --ai-soft:#2B2216; --warn:#F08A66;
+  color-scheme:dark;
+}
+body{background:var(--bg);color:var(--ink);font:15px/1.6 var(--body);}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:20px;padding-block:40px 64px;display:flex;flex-direction:column;gap:48px;}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.15;}
+h1{font-size:clamp(30px,5vw,46px);letter-spacing:-.01em;}
+h2{font-size:26px;}
+h3{font-size:17px;}
+p{margin:0;max-width:70ch;}
+.eyebrow{font:500 12px/1 var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--teal);}
+header{display:flex;flex-direction:column;gap:14px;}
+header .lede{font-size:17px;color:var(--muted);}
+.meta{display:flex;flex-wrap:wrap;gap:8px;}
+.chip{font:500 12px/1 var(--mono);padding:6px 10px;border:1px solid var(--line);border-radius:999px;color:var(--muted);background:var(--surface);}
+section{display:flex;flex-direction:column;gap:18px;}
+.section-head{display:flex;flex-direction:column;gap:8px;}
+.section-head p{color:var(--muted);}
+
+/* diagram */
+figure{margin:0;display:flex;flex-direction:column;gap:12px;}
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface);}
+.scroll svg{display:block;width:100%;min-width:900px;height:auto;color:var(--muted);}
+figcaption{color:var(--muted);font-size:13.5px;max-width:95ch;}
+.n{fill:var(--surface);stroke:var(--line);stroke-width:1.2;}
+.n-core{fill:var(--bg);stroke:var(--teal);stroke-width:1.4;}
+.n-ext{fill:var(--teal-soft);stroke:var(--teal);stroke-width:1.2;stroke-dasharray:5 4;}
+.n-ai{fill:var(--ai-soft);stroke:var(--ai);stroke-width:1.4;}
+.zone-ai{fill:none;stroke:var(--ai);stroke-width:1;stroke-dasharray:3 5;}
+.n-strip{fill:var(--teal-soft);stroke:none;}
+.t{fill:var(--ink);font:600 13px var(--body);}
+.s{fill:var(--muted);font:400 11.5px var(--body);}
+.lane{fill:var(--muted);font:500 10.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;}
+.lane-ai{fill:var(--ai);}
+.e{stroke:var(--muted);stroke-width:1.4;fill:none;}
+.e-ai{stroke:var(--ai);stroke-width:1.4;fill:none;}
+.e-d{stroke-dasharray:4 4;}
+.el{fill:var(--muted);font:400 10.5px var(--mono);}
+.ah{fill:var(--muted);}
+.ah-ai{fill:var(--ai);}
+
+/* flows */
+.flows{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;}
+.flow{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 20px;display:flex;flex-direction:column;gap:10px;}
+.flow ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;font-size:14px;}
+.flow .tag{font:500 11px/1 var(--mono);color:var(--muted);letter-spacing:.06em;text-transform:uppercase;}
+
+/* tables */
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface);}
+table{border-collapse:collapse;width:100%;min-width:680px;font-size:14px;}
+th,td{text-align:left;vertical-align:top;padding:10px 14px;border-bottom:1px solid var(--line);}
+th{font:500 11.5px var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted);background:var(--bg);}
+tr:last-child td{border-bottom:none;}
+td:first-child{white-space:nowrap;font-weight:600;}
+tr.grp td{background:var(--teal-soft);color:var(--teal);font:500 11.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;padding-block:7px;}
+tr.grp.ai td{background:var(--ai-soft);color:var(--ai);}
+.ac{font-family:var(--mono);font-variant-numeric:tabular-nums;color:var(--teal);}
+.vet{font:500 10.5px/1 var(--mono);color:var(--warn);border:1px solid currentColor;border-radius:4px;padding:2px 5px;margin-left:6px;white-space:nowrap;vertical-align:1px;}
+
+/* agents */
+.agents{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;}
+.agent{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px;display:flex;flex-direction:column;gap:8px;}
+.agent .model{font:500 11.5px/1.3 var(--mono);color:var(--ai);}
+.agent p{font-size:14px;}
+.agent .io{font:400 12px/1.5 var(--mono);color:var(--muted);}
+.guard{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px 28px;margin:0;padding:0;list-style:none;font-size:14px;}
+.guard li{padding-left:16px;position:relative;}
+.guard li::before{content:"";position:absolute;left:0;top:.62em;width:7px;height:7px;border-radius:2px;background:var(--ai);}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:28px;}
+.list{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;font-size:14px;}
+.note{font-size:13.5px;color:var(--muted);}
+.dl{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:4px;}
+.btn{font:500 13.5px/1 var(--body);padding:10px 16px;border-radius:8px;border:1px solid var(--teal);background:var(--teal);color:var(--bg);cursor:pointer;}
+.btn.alt{background:transparent;color:var(--teal);}
+.btn:focus-visible{outline:2px solid var(--ai);outline-offset:2px;}
+.btn:disabled{opacity:.6;cursor:progress;}
+#dl-msg{font-size:13px;color:var(--muted);}
+@media print{
+  html:root:not([data-print]){--bg:#FFFFFF;--surface:#FFFFFF;--ink:#142B29;--muted:#4E6561;--line:#CFDCD9;--teal:#0F7C75;--teal-soft:#E1F0EE;--ai:#A2600F;--ai-soft:#FBF1E3;--warn:#9A3B1E;color-scheme:light;}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .dl{display:none!important;}
+  .scroll svg{min-width:0;} .tbl table{min-width:0;}
+  section{break-inside:auto;} .flow,.agent,figure{break-inside:avoid;}
+}
+@media (prefers-reduced-motion: reduce){*{scroll-behavior:auto;}}
+</style>
+<style>body{margin:0}</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<header>
+  <span class="eyebrow">pSpark 2026 · Use case 5 · Pre-build architecture</span>
+  <h1>Digital KAM Blueprint</h1>
+  <p class="lede">A living key-account platform for Psiog. Account plans move out of static Excel workbooks into a versioned, scored and AI-assisted system. Account teams, BD and the Executive team each get their own view, and every account gets a recommended next best action.</p>
+  <div class="meta">
+    <span class="chip">Azure-hosted · 7 Azure services</span>
+    <span class="chip">4 AI providers · 6 agents</span>
+    <span class="chip">All 10 acceptance criteria mapped</span>
+    <span class="chip">Synthetic data only</span>
+  </div>
+  <div class="dl" id="dl" hidden>
+    <button class="btn" id="dl-pdf" type="button">Download PDF</button>
+    <button class="btn alt" id="dl-html" type="button">Download HTML</button>
+    <span id="dl-msg" role="status"></span>
+  </div>
+</header>
+
+<section>
+  <div class="section-head">
+    <span class="eyebrow">01 · Architecture</span>
+    <h2>How the pieces connect</h2>
+  </div>
+  <figure>
+    <div class="scroll">
+    <svg viewBox="0 0 1200 790" role="img" aria-label="Layered architecture. Users sign in to a React app on Azure Static Web Apps. It calls a FastAPI KAM API on App Service, which calls an AI orchestrator on Container Apps. The orchestrator routes to Claude, Gemini, Groq and Ollama. Azure Functions run timers and the Excel import. Data lives in Azure SQL, Blob Storage and Key Vault. Databricks, Power BI and Metabase provide analytics.">
+      <defs>
+        <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" class="ah"/></marker>
+        <marker id="ahai" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" class="ah-ai"/></marker>
+      </defs>
+
+      <!-- lane labels -->
+      <text class="lane" x="24" y="52">Users</text>
+      <text class="lane" x="24" y="169">Experience</text>
+      <text class="lane" x="24" y="324">Services</text>
+      <text class="lane" x="24" y="489">Data</text>
+      <text class="lane" x="24" y="649">Analytics</text>
+      <text class="lane" x="24" y="754">Delivery</text>
+
+      <!-- users -->
+      <rect class="n" x="150" y="20" width="235" height="56" rx="28"/>
+      <text class="t" x="267.5" y="43" text-anchor="middle">Account team &amp; captain</text>
+      <text class="s" x="267.5" y="61" text-anchor="middle">Account-level access</text>
+      <rect class="n" x="415" y="20" width="235" height="56" rx="28"/>
+      <text class="t" x="532.5" y="43" text-anchor="middle">BD / NBD lead</text>
+      <text class="s" x="532.5" y="61" text-anchor="middle">Group-level access</text>
+      <rect class="n" x="680" y="20" width="235" height="56" rx="28"/>
+      <text class="t" x="797.5" y="43" text-anchor="middle">Executive team</text>
+      <text class="s" x="797.5" y="61" text-anchor="middle">Executive-level access</text>
+      <rect class="n" x="945" y="20" width="235" height="56" rx="28"/>
+      <text class="t" x="1062.5" y="43" text-anchor="middle">Admin</text>
+      <text class="s" x="1062.5" y="61" text-anchor="middle">Master data &amp; configuration</text>
+
+      <line class="e" x1="400" y1="76" x2="400" y2="118" marker-end="url(#ah)"/>
+      <text class="el" x="408" y="102">sign in · role-scoped views</text>
+
+      <!-- experience -->
+      <rect class="n-core" x="150" y="120" width="500" height="90" rx="8"/>
+      <text class="t" x="166" y="146">Azure Static Web Apps · React SPA</text>
+      <text class="s" x="166" y="168">Account plan wizard · MAC · NBD · EBD views</text>
+      <text class="s" x="166" y="186">Admin master data · in-app charts · NBA panel</text>
+
+      <rect class="n-ext" x="680" y="120" width="210" height="90" rx="8"/>
+      <text class="t" x="696" y="146">Excel KAM workbooks</text>
+      <text class="s" x="696" y="168">Existing .xlsx in</text>
+      <text class="s" x="696" y="186">Same-structure .xlsx out</text>
+
+      <!-- AI zone -->
+      <rect class="zone-ai" x="915" y="228" width="275" height="472" rx="14"/>
+      <text class="lane lane-ai" x="931" y="249">AI layer</text>
+
+      <!-- services -->
+      <line class="e" x1="560" y1="210" x2="560" y2="258" marker-end="url(#ah)"/>
+      <text class="el" x="568" y="238">REST /api/v1 · JWT</text>
+      <line class="e" x1="785" y1="210" x2="785" y2="258" marker-start="url(#ah)" marker-end="url(#ah)"/>
+      <text class="el" x="793" y="238">upload / download</text>
+
+      <rect class="n" x="150" y="260" width="290" height="120" rx="8"/>
+      <text class="t" x="166" y="284">Azure Functions</text>
+      <text class="s" x="166" y="304">Timer · review cadence &amp; reminders</text>
+      <text class="s" x="166" y="322">Timer · stale sections, overdue actions</text>
+      <text class="s" x="166" y="340">Blob · Excel import &amp; validation</text>
+      <text class="s" x="166" y="358">Nightly · NBA + risk batch, extracts</text>
+
+      <rect class="n-core" x="470" y="260" width="420" height="120" rx="8"/>
+      <text class="t" x="486" y="284">Azure App Service · KAM API (FastAPI)</text>
+      <text class="s" x="486" y="304">Plans · sections · versions · stakeholder map</text>
+      <text class="s" x="486" y="322">Scoring engine · weights from master data</text>
+      <text class="s" x="486" y="340">Actions linked to source section · RBAC</text>
+      <text class="s" x="486" y="358">OpenAPI docs · Excel, BD and Exec export packs</text>
+
+      <line class="e-ai" x1="892" y1="320" x2="928" y2="320" marker-start="url(#ahai)" marker-end="url(#ahai)"/>
+      <text class="el" x="910" y="311" text-anchor="middle">tools</text>
+
+      <rect class="n-ai" x="930" y="260" width="245" height="120" rx="8"/>
+      <text class="t" x="946" y="284">AI Orchestrator</text>
+      <text class="s" x="946" y="304">Azure Container Apps</text>
+      <text class="s" x="946" y="322">Agents with tool calls to KAM API</text>
+      <text class="s" x="946" y="340">Model router · fallback on 429</text>
+      <text class="s" x="946" y="358">Prompt cache · token budget</text>
+
+      <!-- providers -->
+      <path class="e-ai" d="M945 380 V658"/>
+      <line class="e-ai" x1="945" y1="448" x2="958" y2="448" marker-end="url(#ahai)"/>
+      <line class="e-ai" x1="945" y1="518" x2="958" y2="518" marker-end="url(#ahai)"/>
+      <line class="e-ai" x1="945" y1="588" x2="958" y2="588" marker-end="url(#ahai)"/>
+      <line class="e-ai" x1="945" y1="658" x2="958" y2="658" marker-end="url(#ahai)"/>
+
+      <rect class="n-ai" x="960" y="420" width="215" height="56" rx="8"/>
+      <text class="t" x="974" y="442">Claude API</text>
+      <text class="s" x="974" y="461">Next best action · exec brief</text>
+      <rect class="n-ai" x="960" y="490" width="215" height="56" rx="8"/>
+      <text class="t" x="974" y="512">Gemini API</text>
+      <text class="s" x="974" y="531">Excel mapping · long context</text>
+      <rect class="n-ai" x="960" y="560" width="215" height="56" rx="8"/>
+      <text class="t" x="974" y="582">Groq API (Llama)</text>
+      <text class="s" x="974" y="601">Inline copilot · low latency</text>
+      <rect class="n-ai" x="960" y="630" width="215" height="56" rx="8"/>
+      <text class="t" x="974" y="652">Ollama (local)</text>
+      <text class="s" x="974" y="671">Synthetic data · AI evals</text>
+
+      <!-- services to data -->
+      <line class="e" x1="265" y1="382" x2="265" y2="438" marker-start="url(#ah)" marker-end="url(#ah)"/>
+      <text class="el" x="273" y="414">trigger · write</text>
+      <line class="e" x1="425" y1="380" x2="425" y2="438" marker-end="url(#ah)"/>
+      <text class="el" x="433" y="414">flags</text>
+      <line class="e" x1="600" y1="380" x2="600" y2="438" marker-start="url(#ah)" marker-end="url(#ah)"/>
+      <text class="el" x="608" y="414">CRUD · versions</text>
+      <line class="e e-d" x1="820" y1="380" x2="820" y2="438" marker-end="url(#ah)"/>
+      <text class="el" x="828" y="414">secrets</text>
+
+      <!-- data -->
+      <rect class="n" x="150" y="440" width="230" height="90" rx="8"/>
+      <text class="t" x="166" y="466">Blob Storage</text>
+      <text class="s" x="166" y="486">Raw .xlsx · validation reports</text>
+      <text class="s" x="166" y="504">Export packs · extracts</text>
+
+      <rect class="n-core" x="410" y="440" width="310" height="90" rx="8"/>
+      <text class="t" x="426" y="466">Azure SQL</text>
+      <text class="s" x="426" y="486">Temporal tables = plan version history</text>
+      <text class="s" x="426" y="504">Master data · scores · actions · AI log</text>
+
+      <rect class="n" x="750" y="440" width="140" height="90" rx="8"/>
+      <text class="t" x="766" y="466">Key Vault</text>
+      <text class="s" x="766" y="486">LLM + DB secrets</text>
+      <text class="s" x="766" y="504">Managed identity</text>
+
+      <!-- data to analytics -->
+      <line class="e" x1="265" y1="530" x2="265" y2="598" marker-end="url(#ah)"/>
+      <text class="el" x="273" y="570">history files</text>
+      <line class="e" x1="425" y1="530" x2="425" y2="598" marker-end="url(#ah)"/>
+      <text class="el" x="433" y="570">nightly extract</text>
+      <line class="e" x1="710" y1="530" x2="710" y2="598" marker-end="url(#ah)"/>
+      <text class="el" x="718" y="570">read-only</text>
+
+      <!-- analytics -->
+      <rect class="n" x="150" y="600" width="290" height="90" rx="8"/>
+      <text class="t" x="166" y="626">Databricks (free workspace)</text>
+      <text class="s" x="166" y="646">Bronze → silver → gold</text>
+      <text class="s" x="166" y="664">Score trends · at-risk features</text>
+
+      <line class="e" x1="440" y1="645" x2="468" y2="645" marker-end="url(#ah)"/>
+      <text class="el" x="454" y="637" text-anchor="middle">gold</text>
+
+      <rect class="n" x="470" y="600" width="200" height="90" rx="8"/>
+      <text class="t" x="486" y="626">Power BI Desktop</text>
+      <text class="s" x="486" y="646">Executive portfolio</text>
+      <text class="s" x="486" y="664">Published .pbix</text>
+
+      <rect class="n" x="700" y="600" width="190" height="90" rx="8"/>
+      <text class="t" x="716" y="626">Metabase (optional)</text>
+      <text class="s" x="716" y="646">BD self-serve</text>
+      <text class="s" x="716" y="664">Read-only queries</text>
+
+      <!-- delivery -->
+      <rect class="n-strip" x="150" y="730" width="1040" height="40" rx="8"/>
+      <text class="s" x="166" y="754">GitHub repo · Issues + Projects · Actions CI/CD → Azure     ·     Podman local containers     ·     Azure CLI · GitHub CLI     ·     VS Code + Claude Code (subagents, skills, GitHub connector)</text>
+    </svg>
+    </div>
+    <figcaption>The browser only talks to the KAM API. The API owns the data and calls the AI Orchestrator, so LLM keys never reach the client. The orchestrator picks a model per task and falls back to another provider when one hits a rate limit. The API writes uploaded workbooks to Blob Storage, and that write triggers the import Function. Dashed boxes and lines are external inputs and secret reads. Every Azure service reads its secrets from Key Vault through managed identity. The same REST API is published for BD and Executive consumers.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <div class="section-head">
+    <span class="eyebrow">02 · Key flows</span>
+    <h2>Three paths the demo should show</h2>
+  </div>
+  <div class="flows">
+    <div class="flow">
+      <span class="tag">AC 5 · Import</span>
+      <h3>Excel workbook to living plan</h3>
+      <ol>
+        <li>User uploads a KAM .xlsx. The API stores it in Blob Storage.</li>
+        <li>A blob-trigger Function parses it with openpyxl.</li>
+        <li>Gemini maps non-standard cells to the KAM schema and gives a confidence score per field.</li>
+        <li>A deterministic validator checks required fields, RACI, A/B/C importance and dates.</li>
+        <li>The validation report is shown in the UI. The user confirms and the plan lands in Azure SQL as version 1.</li>
+      </ol>
+    </div>
+    <div class="flow">
+      <span class="tag">AC 8 · AI</span>
+      <h3>Next best action</h3>
+      <ol>
+        <li>A nightly Function, or the “Suggest” button, calls the orchestrator.</li>
+        <li>Claude calls tools: plan gaps, scores, stakeholder map, overdue actions.</li>
+        <li>It returns JSON: what to do, whose help, which channel, why, at-risk flag, source sections.</li>
+        <li>The output is schema-checked and logged with model, prompt and tokens.</li>
+        <li>The user accepts it and it becomes a tracked action linked to its section.</li>
+      </ol>
+    </div>
+    <div class="flow">
+      <span class="tag">AC 2 · 3 · 4 · Cadence</span>
+      <h3>Continuous planning loop</h3>
+      <ol>
+        <li>Every save creates a new version through SQL temporal tables.</li>
+        <li>The scoring engine recalculates opportunity, brickwall, checklist and perception scores.</li>
+        <li>Timer Functions flag stale sections and overdue actions, then raise in-app reminders.</li>
+        <li>A nightly extract moves data to Databricks, where score trends are built for the MAC and Power BI views.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-head">
+    <span class="eyebrow">03 · Tools &amp; tech stack</span>
+    <h2>What each tool does for Digital KAM</h2>
+    <p>Everything comes from the pSpark approved list. Items marked <span class="vet">clear first</span> are frameworks or libraries to run past the core committee before 10:30.</p>
+  </div>
+  <div class="tbl">
+  <table>
+    <thead><tr><th>Tool</th><th>Role</th><th>What it does for our use case</th></tr></thead>
+    <tbody>
+      <tr class="grp ai"><td colspan="3">AI assistants and models</td></tr>
+      <tr><td>Claude API</td><td>Runtime reasoning agents</td><td>Runs the next best action, risk explanation and executive brief agents. Sonnet 5 handles reasoning and Haiku 4.5 handles bulk classification. Prompt caching and nightly batching keep spend within the $25 credit.</td></tr>
+      <tr><td>Claude seats + Claude Code</td><td>Build-time copilot</td><td>Used for planning, schema design, code, tests and docs. Subagents generate tests and review PRs, and the GitHub connector works on issues. Seats on the second org cover build work so the API credit is kept for runtime.</td></tr>
+      <tr><td>Gemini API</td><td>Document understanding</td><td>Reads a whole KAM workbook in one long-context call, maps it to our schema and explains mismatches for the validation report. It is also the fallback model when Claude hits a limit.</td></tr>
+      <tr><td>Groq API</td><td>Low-latency copilot</td><td>Responds while users edit sections. It drafts 3-year and 1-year vision, suggests strategies from the menu and rewrites challenges. Speed matters here more than depth.</td></tr>
+      <tr><td>Ollama (local)</td><td>Private, offline model</td><td>Generates fictional accounts, stakeholders and opportunities so no customer data is used. It also scores AI outputs against a golden test set (LLM-as-judge) and works offline in dev.</td></tr>
+
+      <tr class="grp"><td colspan="3">Application</td></tr>
+      <tr><td>React + TypeScript (Vite) <span class="vet">clear first</span></td><td>Web portal</td><td>Plan wizard with completion status per section. Account, MAC, NBD, EBD and Admin views. The NBA panel sits on each account.</td></tr>
+      <tr><td>Recharts <span class="vet">clear first</span></td><td>In-app charts</td><td>Score trend lines, brickwall radar, opportunity matrix (potential × effort) and portfolio health tiles.</td></tr>
+      <tr><td>Python FastAPI <span class="vet">clear first</span></td><td>REST API</td><td>Accounts, plans, scores and actions endpoints, with OpenAPI/Swagger docs generated automatically (AC 6). Hosts the scoring engine and RBAC. Python is shared with Functions and the AI code.</td></tr>
+      <tr><td>openpyxl + pandas <span class="vet">clear first</span></td><td>Excel round trip</td><td>Parses legacy workbooks. Writes plans back in the same structure and builds the BD and Executive export packs.</td></tr>
+
+      <tr class="grp"><td colspan="3">Azure (deployment base)</td></tr>
+      <tr><td>Static Web Apps</td><td>Frontend hosting</td><td>Serves the SPA with built-in auth and role routing for Account, Group and Executive access.</td></tr>
+      <tr><td>App Service</td><td>API hosting</td><td>Runs the KAM API, the system's single front door for the UI and external consumers.</td></tr>
+      <tr><td>Functions</td><td>Background jobs</td><td>Review-cadence reminders, stale and overdue flags, blob-triggered Excel import, nightly NBA batch and Databricks extracts.</td></tr>
+      <tr><td>Container Apps</td><td>AI orchestrator</td><td>Runs the agent service as a container built with Podman. It scales on its own and keeps LLM rate limits and retries away from the core API.</td></tr>
+      <tr><td>Azure SQL</td><td>System of record</td><td>Relational KAM model. Temporal tables give version history and change diffs for free. Master data tables make offerings, strategies, weights and captains configurable (AC 9).</td></tr>
+      <tr><td>Blob Storage</td><td>Files</td><td>Raw uploaded workbooks, validation reports, generated export packs and Databricks extract files.</td></tr>
+      <tr><td>Key Vault</td><td>Secrets</td><td>Claude, Gemini and Groq keys and DB connection strings, read through managed identity. No secrets in the repo.</td></tr>
+
+      <tr class="grp"><td colspan="3">Data and BI</td></tr>
+      <tr><td>Databricks (free)</td><td>Analytics platform</td><td>Bronze, silver and gold tables. Builds score trends across versions, action velocity and at-risk features that feed the risk agent.</td></tr>
+      <tr><td>Power BI Desktop</td><td>Executive dashboard</td><td>Portfolio summary, account health, NBD pipeline and EBD cross-sell by offering. The .pbix is submitted with the artifacts.</td></tr>
+      <tr><td>Metabase <span class="vet">clear first</span></td><td>Self-serve (optional)</td><td>Read-only ad-hoc questions for BD on Azure SQL. Hosted on Container Apps, and only built if time allows.</td></tr>
+
+      <tr class="grp"><td colspan="3">Delivery, QA and design</td></tr>
+      <tr><td>GitHub</td><td>SDLC backbone</td><td>Repo, Issues and a Projects board mapped to the 10 acceptance criteria, PR reviews, and Actions CI/CD deploying to Azure. Also holds the submitted artifacts.</td></tr>
+      <tr><td>Podman · Azure CLI · GitHub CLI</td><td>Local and scripted ops</td><td>Local containers for the API and orchestrator. A provisioning script that anyone can re-run for the resource group. Repo automation.</td></tr>
+      <tr><td>pytest · Vitest <span class="vet">clear first</span></td><td>Quality</td><td>Unit tests for the scoring engine, API contract tests, UI tests and an AI golden-set eval. Test reports are committed for offline evaluation.</td></tr>
+      <tr><td>draw.io · Vertabelo · Excalidraw</td><td>Design artifacts</td><td>Architecture diagram, ERD for the KAM schema and wireframes of the plan wizard.</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section>
+  <div class="section-head">
+    <span class="eyebrow">04 · AI agents</span>
+    <h2>Six agents, each with one job</h2>
+    <p>Each agent returns structured JSON checked against a schema. A person accepts every AI suggestion before it changes a plan.</p>
+  </div>
+  <div class="agents">
+    <div class="agent">
+      <span class="model">Claude Sonnet 5 · tool use</span>
+      <h3>Next Best Action</h3>
+      <p>Recommends what to do next for each account, whose help to seek, which channel to use and why. It works from plan gaps, scores, the stakeholder map and overdue actions.</p>
+      <span class="io">out → action, helper, channel, rationale, at_risk, source_sections</span>
+    </div>
+    <div class="agent">
+      <span class="model">Gemini · long context</span>
+      <h3>Workbook Interpreter</h3>
+      <p>Maps legacy Excel layouts to the KAM schema, gives a confidence score per field and explains what it could not map.</p>
+      <span class="io">out → mapped rows + validation findings</span>
+    </div>
+    <div class="agent">
+      <span class="model">Groq · Llama</span>
+      <h3>Plan Copilot</h3>
+      <p>Helps users while they fill in sections. It drafts vision and objectives, suggests strategies and checklist answers, and summarises stakeholder notes.</p>
+      <span class="io">out → draft text the user edits or rejects</span>
+    </div>
+    <div class="agent">
+      <span class="model">Claude Haiku 4.5 · nightly batch</span>
+      <h3>Risk Sentinel</h3>
+      <p>Reads score trends, stale sections and overdue actions from Databricks gold tables, then flags at-risk accounts with a plain-language reason.</p>
+      <span class="io">out → risk level, drivers, flagged sections</span>
+    </div>
+    <div class="agent">
+      <span class="model">Claude Sonnet 5</span>
+      <h3>Executive Briefer</h3>
+      <p>Writes the portfolio narrative for the Executive export pack and the MAC view: what moved, where it is at risk and where to invest.</p>
+      <span class="io">out → briefing sections with cited accounts</span>
+    </div>
+    <div class="agent">
+      <span class="model">Ollama · local model</span>
+      <h3>Synthetic Data &amp; Evaluator</h3>
+      <p>Creates realistic fictional accounts for the demo and tests. Scores the other agents' outputs against a rubric in the test suite.</p>
+      <span class="io">out → seed data, eval scores per agent</span>
+    </div>
+  </div>
+  <ul class="guard">
+    <li>Synthetic or public data only. No customer data or Psiog IP goes to any model.</li>
+    <li>Keys stay in Key Vault and are only called server-side through the orchestrator.</li>
+    <li>Every AI call is logged with agent, model, tokens and outcome in an AI audit table.</li>
+    <li>A token budget per agent, response caching and a provider fallback keep us running if one model hits its rate limit.</li>
+  </ul>
+</section>
+
+<section>
+  <div class="section-head">
+    <span class="eyebrow">05 · Coverage</span>
+    <h2>Acceptance criteria to components</h2>
+  </div>
+  <div class="tbl">
+  <table>
+    <thead><tr><th>AC</th><th>Criterion</th><th>Where it is built</th></tr></thead>
+    <tbody>
+      <tr><td class="ac">1</td><td>Digitised account plan</td><td>SPA wizard with 8 guided sections and completion % per section. Section tables in Azure SQL.</td></tr>
+      <tr><td class="ac">2</td><td>Scoring</td><td>API scoring engine. Criteria and weights read from master data, so changes need no deploy.</td></tr>
+      <tr><td class="ac">3</td><td>Continuous planning</td><td>Temporal tables for versions and diffs. Timer Functions for cadence, stale and overdue flags. Databricks for score trends.</td></tr>
+      <tr><td class="ac">4</td><td>Action tracking</td><td>Actions table with owner, due date, status and a link to its source section. Status board in the SPA.</td></tr>
+      <tr><td class="ac">5</td><td>Excel import and export</td><td>Blob-trigger Function, Gemini mapping, deterministic validator and report. openpyxl export in the same structure.</td></tr>
+      <tr><td class="ac">6</td><td>REST API and tailored exports</td><td>FastAPI with OpenAPI docs. BD pack (opportunities, stakeholders, actions) and Executive pack (summary, health, risks).</td></tr>
+      <tr><td class="ac">7</td><td>Views</td><td>Account, MAC, NBD and EBD screens in the SPA. Executive portfolio in Power BI.</td></tr>
+      <tr><td class="ac">8</td><td>AI next best action</td><td>AI Orchestrator with the Next Best Action and Risk Sentinel agents.</td></tr>
+      <tr><td class="ac">9</td><td>Configurable</td><td>Admin screens for offerings, strategy menu, scoring criteria, account groups and captains.</td></tr>
+      <tr><td class="ac">10</td><td>Access</td><td>JWT roles for Account, Group and Executive access, enforced by row scoping in the API.</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section class="two">
+  <div style="display:flex;flex-direction:column;gap:14px;">
+    <div class="section-head">
+      <span class="eyebrow">06 · Team</span>
+      <h2>Suggested split for five</h2>
+    </div>
+    <ul class="list">
+      <li><strong>Architect (you):</strong> architecture, AI orchestrator and agents, reviewing AI output, committee liaison.</li>
+      <li><strong>Backend:</strong> SQL schema, FastAPI, scoring engine, RBAC.</li>
+      <li><strong>Frontend:</strong> SPA views, plan wizard, in-app charts.</li>
+      <li><strong>Integration and data:</strong> Excel import and export, Functions, Databricks, Power BI.</li>
+      <li><strong>QA and docs:</strong> test plan, pytest and Vitest, AI golden set, demo script, README for offline evaluation.</li>
+    </ul>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:14px;">
+    <div class="section-head">
+      <span class="eyebrow">07 · Before 10:30</span>
+      <h2>Clear with the core committee</h2>
+    </div>
+    <ul class="list">
+      <li>Frameworks: React + TypeScript (Vite), FastAPI, Recharts, openpyxl and pandas, pytest and Vitest.</li>
+      <li>Whether the $25 Claude credit can be used as an API key for runtime agents.</li>
+      <li>Running Metabase in a container on Container Apps.</li>
+      <li>Entra ID sign-in for Static Web Apps, or app-issued JWTs instead.</li>
+      <li>Email reminders need a service outside the list. Plan for in-app reminders unless one is approved.</li>
+    </ul>
+    <p class="note">Use case questions close at lunch, so raise open questions about the KAM brief in the morning.</p>
+  </div>
+</section>
+
+</div>
+
+<script>
+(async () => {
+  const box = document.getElementById("dl");
+  const msg = document.getElementById("dl-msg");
+  if (!window.claude || !window.claude.use) return;
+  const downloads = await window.claude.use("downloads");
+  if (!downloads) return;
+  box.hidden = false;
+  async function offer(btn, path) {
+    btn.disabled = true;
+    msg.textContent = "Preparing " + path + "…";
+    try {
+      const res = await fetch(path);
+      if (!res.ok) throw { code: "missing" };
+      await downloads.save({ filename: path, data: await res.blob() });
+      msg.textContent = "Saved " + path + ".";
+    } catch (e) {
+      const code = e && e.code;
+      if (code === "declined") msg.textContent = "Download cancelled.";
+      else if (code === "rate_limited") msg.textContent = "A download prompt is already open. Finish it, then try again.";
+      else if (code === "unavailable" || code === "not_granted" || code === "capability_disabled" || code === "capability_removed") { msg.textContent = ""; box.hidden = true; }
+      else msg.textContent = "The file could not be downloaded here. Open the page in a browser and try again.";
+    } finally {
+      btn.disabled = false;
+    }
+  }
+  document.getElementById("dl-pdf").addEventListener("click", e => offer(e.currentTarget, "Digital-KAM-Blueprint.pdf"));
+  document.getElementById("dl-html").addEventListener("click", e => offer(e.currentTarget, "Digital-KAM-Blueprint.html"));
+})();
+</script>
+</body>
+</html>
